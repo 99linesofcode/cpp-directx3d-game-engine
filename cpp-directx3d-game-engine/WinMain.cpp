@@ -1,5 +1,16 @@
 #include <Windows.h>
 
+LRESULT CALLBACK WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
+	switch (uMsg)
+	{
+	case WM_CLOSE: 
+		PostQuitMessage(0);
+		break;
+	}
+
+	return DefWindowProc(hWnd, uMsg, wParam, lParam);
+}
+
 int CALLBACK WinMain(
 	HINSTANCE	hInstance,
 	HINSTANCE	hPrevInstance,
@@ -14,7 +25,7 @@ int CALLBACK WinMain(
 
 	wc.cbSize = sizeof( wc );
 	wc.style = CS_OWNDC;
-	wc.lpfnWndProc = DefWindowProc;
+	wc.lpfnWndProc = WindowProc;
 	wc.cbClsExtra = 0;
 	wc.cbWndExtra = 0;
 	wc.hInstance = hInstance;
@@ -46,4 +57,12 @@ int CALLBACK WinMain(
 	if (hWnd == nullptr) return 0;
 	
 	ShowWindow(hWnd, nCmdShow);
+
+	// message loop
+	MSG msg = {};  
+
+	while (GetMessage(&msg, nullptr, 0, 0)) {
+		TranslateMessage(&msg);
+		DispatchMessage(&msg);
+	}
 };
