@@ -9,35 +9,35 @@ BaseException::BaseException(int line, const char* file) noexcept : line(line), 
 
 const char* BaseException::what() const noexcept
 {
-	std::ostringstream oss;
+    std::ostringstream oss;
 
-	oss << GetType() << std::endl << GetOriginString();
-	whatBuffer = oss.str();
+    oss << GetType() << std::endl << GetOriginString();
+    whatBuffer = oss.str();
 
-	return whatBuffer.c_str();
+    return whatBuffer.c_str();
 }
 
 const char* BaseException::GetType() const noexcept
 {
-	return "BaseException";
+    return "BaseException";
 }
 
 int BaseException::GetLine() const noexcept
 {
-	return line;
+    return line;
 }
 
 const std::string& BaseException::GetFile() const noexcept
 {
-	return file;
+    return file;
 }
 
 std::string BaseException::GetOriginString() const noexcept
 {
-	std::ostringstream oss;
+    std::ostringstream oss;
 
-	oss << "[File] " << file << std::endl
-		<< "[Line] " << line;
+    oss << "[File] " << file << std::endl
+        << "[Line] " << line;
 
-	return oss.str();
+    return oss.str();
 }
