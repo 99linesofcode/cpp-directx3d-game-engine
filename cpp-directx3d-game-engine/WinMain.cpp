@@ -1,11 +1,31 @@
 #include <Windows.h>
+#include <sstream>
+#include <string>
 
 LRESULT CALLBACK WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 	switch (uMsg)
 	{
-	case WM_CLOSE: 
+	case WM_CLOSE:
 		PostQuitMessage(0);
 		break;
+	case WM_CHAR:
+	{
+		static std::wstring title;
+		title.push_back((char) wParam);
+
+		SetWindowText(hWnd, title.c_str());
+	}
+	break;
+	case WM_LBUTTONDOWN:
+	{
+		POINTS pt = MAKEPOINTS(lParam);
+		std::wostringstream wss;
+
+		wss << "(" << pt.x << ", " << pt.y << ")";
+
+		SetWindowText(hWnd, wss.str().c_str());
+	}
+	break;
 	}
 
 	return DefWindowProc(hWnd, uMsg, wParam, lParam);
@@ -23,7 +43,7 @@ int CALLBACK WinMain(
 
 	WNDCLASSEX wc = { 0 };
 
-	wc.cbSize = sizeof( wc );
+	wc.cbSize = sizeof(wc);
 	wc.style = CS_OWNDC;
 	wc.lpfnWndProc = WindowProc;
 	wc.cbClsExtra = 0;
@@ -36,7 +56,7 @@ int CALLBACK WinMain(
 	wc.lpszClassName = className;
 	wc.hIconSm = nullptr;
 
-	RegisterClassEx( &wc );
+	RegisterClassEx(&wc);
 
 	// create instance of window
 	HWND hWnd = CreateWindowEx(
@@ -55,11 +75,11 @@ int CALLBACK WinMain(
 	);
 
 	if (hWnd == nullptr) return 0;
-	
+
 	ShowWindow(hWnd, nCmdShow);
 
 	// message loop
-	MSG msg = {};  
+	MSG msg = {};
 
 	while (GetMessage(&msg, nullptr, 0, 0)) {
 		TranslateMessage(&msg);
